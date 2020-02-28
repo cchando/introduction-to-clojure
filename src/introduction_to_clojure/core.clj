@@ -275,23 +275,21 @@
 
 
 (defn day-at-the-bakery []
-  (doseq [order (get-morning-orders)]
-    (let [items (get order :items)
-          n (get items :cake 0)
-          m (get items :cookie 0)]
-      (fetch-list (add-ingredients
-       (multiply-ingredients n cake-ingredients)
-       (multiply-ingredients m cookie-ingredients)))
-      (dotimes [i n]
-        (let [rack-id (bake-cake)]
-          (delivery {:orderid (get order :orderid)
-                     :address (get order :address)
-                     :rackids [rack-id]})))
-      (dotimes [i m]
-        (let [rack-id (bake-cookies)]
-          (delivery {:orderid (get order :orderid)
-                     :address (get order :address)
-                     :rackids [rack-id]}))))))
+  (let [orders (get-morning-orders)
+        ingredients (orders->ingredients orders)]
+    (fetch-list ingredients)
+    (doseq [order orders]
+      (let [items (get order :items)]
+        (dotimes [n (get items :cake 0)]
+          (let [rack-id (bake-cake)]
+            (delivery {:orderid (get order :orderid)
+                       :address (get order :address)
+                       :rackids [rack-id]})))
+        (dotimes [n (get items :cookie 0)]
+          (let [rack-id (bake-cookies)]
+            (delivery {:orderid (get order :orderid)
+                       :address (get order :address)
+                       :rackids [rack-id]})))))))
 
 
 
