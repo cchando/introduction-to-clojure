@@ -12,6 +12,16 @@
 
 (def simple #{:butter})
 
+(def cake-ingredients {:egg 2
+                       :flour 2
+                       :sugar 1
+                       :milk 1})
+
+(def cookie-ingredients {:egg 1
+                         :flour 1
+                         :sugar 1
+                         :butter 1})
+
 (defn error [& args]
   (apply println args)
   :error)
@@ -278,19 +288,13 @@
 (defn order->ingredients [order]
   (let [items (get order :items)]
     (add-ingredients
-     (multiply-ingredients (get items :cake 0) {:egg 2
-                                                :flour 2
-                                                :sugar 1
-                                                :milk 1})
-     (multiply-ingredients (get items :cookie 0) {:egg 1
-                                                  :flour 1
-                                                  :butter 1
-                                                  :sugar 1}))))
+     (multiply-ingredients (get items :cake 0) cake-ingredients)
+     (multiply-ingredients (get items :cookie 0) cookie-ingredients))))
 
 
 (defn orders->ingredients [orders]
   (reduce add-ingredients {} (for [order orders]
-                              (order->ingredients order))))
+                               (order->ingredients order))))
 
 
 
