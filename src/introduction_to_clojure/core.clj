@@ -248,29 +248,6 @@
       (unload-amount ingr (get shopping-list ingr 0)))))
 
 
-(defn day-at-the-bakery []
-  (doseq [order (get-morning-orders)]
-    (let [items (get order :items)]
-      (dotimes [n (get items :cake 0)]
-        (fetch-list {:egg 2
-                     :flour 2
-                     :milk 1
-                     :sugar 1})
-        (let [rack-id (bake-cake)]
-          (delivery {:orderid (get order :orderid)
-                      :address (get order :address)
-                      :rackids [rack-id]})))
-      (dotimes [n (get items :cookies 0)]
-        (fetch-list {:egg 1
-                     :flour 1
-                     :butter 1
-                     :sugar 1})
-        (let [rack-id (bake-cookies)]
-          (delivery {:orderid (get order :orderid)
-                      :address (get order :address)
-                      :rackids [rack-id]}))))))
-
-
 (defn main []
   (day-at-the-bakery))
 
@@ -295,6 +272,27 @@
 (defn orders->ingredients [orders]
   (reduce add-ingredients {} (for [order orders]
                                (order->ingredients order))))
+
+
+(defn day-at-the-bakery []
+  (doseq [order (get-morning-orders)]
+    (let [items (get order :items)
+          n (get items :cake 0)
+          m (get items :cookie 0)]
+      (fetch-list (add-ingredients
+       (multiply-ingredients n cake-ingredients)
+       (multiply-ingredients m cookie-ingredients)))
+      (dotimes [i n]
+        (let [rack-id (bake-cake)]
+          (delivery {:orderid (get order :orderid)
+                     :address (get order :address)
+                     :rackids [rack-id]})))
+      (dotimes [i m]
+        (let [rack-id (bake-cookies)]
+          (delivery {:orderid (get order :orderid)
+                     :address (get order :address)
+                     :rackids [rack-id]}))))))
+
 
 
 
