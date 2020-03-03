@@ -292,6 +292,27 @@
                        :rackids [rack-id]})))))))
 
 
+(defn bake [item]
+  (cond
+    (= item :cake)
+    (bake-cake)
+    (= item :cookies)
+    (bake-cookies)
+    :else
+    (error "I don't know how to bake" item)))
 
+
+(defn day-at-the-bakery []
+  (let [orders (get-morning-orders)
+        ingredients (orders->ingredients orders)]
+    (fetch-list ingredients)
+    (doseq [order orders]
+      (let [items (get order :items)
+            racks (for [kv items
+                        i (range (second kv))]
+                    (bake (first kv)))]
+        (delivery {:orderid (get order :orderid)
+                   :address (get order :address)
+                   :rackids racks})))))
 
 
