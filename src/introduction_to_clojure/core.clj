@@ -26,38 +26,6 @@
   (apply println args)
   :error)
 
-(defn add-egg []
-  (grab :egg)
-  (squeeze)
-  (add-to-bowl))
-
-
-(defn add-flour []
-  (grab :cup)
-  (scoop :flour)
-  (add-to-bowl)
-  (release))
-
-
-(defn add-milk []
-  (grab :cup)
-  (scoop :milk)
-  (add-to-bowl)
-  (release))
-
-
-(defn add-sugar []
-  (grab :cup)
-  (scoop :sugar)
-  (add-to-bowl)
-  (release))
-
-
-(defn add-butter []
-  (grab :butter)
-  (add-to-bowl))
-
-
 (defn scooped? [ingr]
   (contains? scooped ingr))
 
@@ -117,36 +85,6 @@
       (error "Unknown ingredient:" ingr)))
   ([ingr]
     (add ingr 1)))
-
-
-(defn add-eggs [n]
-  (dotimes [e n]
-    (add-egg))
-  :ok)
-
-
-(defn add-flour-cups [n]
-  (dotimes [e n]
-    (add-flour))
-  :ok)
-
-
-(defn add-milk-cups [n]
-  (dotimes [e n]
-    (add-milk))
-  :ok)
-
-
-(defn add-sugar-cups [n]
-  (dotimes [e n]
-    (add-sugar))
-  :ok)
-
-
-(defn add-butters [n]
-  (dotimes [e n]
-    (add-butter))
-  :ok)
 
 
 (defn bake-cake []
@@ -248,10 +186,6 @@
       (unload-amount ingr (get shopping-list ingr 0)))))
 
 
-(defn main []
-  (day-at-the-bakery))
-
-
 (defn add-ingredients [a b]
   (merge-with + a b))
 
@@ -292,6 +226,31 @@
                        :rackids [rack-id]})))))))
 
 
+(defn bake [item]
+  (cond
+    (= item :cake)
+    (bake-cake)
+    (= item :cookies)
+    (bake-cookies)
+    :else
+    (error "I don't know how to bake" item)))
 
+
+(defn day-at-the-bakery []
+  (let [orders (get-morning-orders)
+        ingredients (orders->ingredients orders)]
+    (fetch-list ingredients)
+    (doseq [order orders]
+      (let [items (get order :items)
+            racks (for [kv items
+                        i (range (second kv))]
+                    (bake (first kv)))]
+        (delivery {:orderid (get order :orderid)
+                   :address (get order :address)
+                   :rackids racks})))))
+
+
+(defn main []
+  (day-at-the-bakery))
 
 
