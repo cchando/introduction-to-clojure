@@ -218,6 +218,10 @@
     (error "I don't know how to bake" item)))
 
 
+(defn main []
+  (day-at-the-bakery))
+
+
 (defn day-at-the-bakery []
   (let [orders (get-morning-orders)
         ingredients (orders->ingredients orders)]
@@ -230,9 +234,5 @@
         (delivery {:orderid (get order :orderid)
                    :address (get order :address)
                    :rackids racks})))))
-
-
-(defn main []
-  (day-at-the-bakery))
 
 
