@@ -2,13 +2,13 @@
 (ns introduction-to-clojure.core
   (:require [bakery.core :refer :all]))
 
-(def pantry-ingredients #{:flour :sugar})
+(def pantry-ingredients #{:flour :sugar :cocoa})
 
 (def fridge-ingredients #{:milk :egg :butter})
 
 (def squeezed #{:egg})
 
-(def scooped #{:milk :flour :sugar})
+(def scooped #{:milk :flour :sugar :cocoa})
 
 (def simple #{:butter})
 
@@ -17,10 +17,20 @@
                        :sugar 1
                        :milk 1})
 
+
 (def cookie-ingredients {:egg 1
                          :flour 1
                          :sugar 1
                          :butter 1})
+
+
+(def brownie-ingredients {:egg 1
+                         :flour 2
+                         :cocoa 2
+                         :milk 1
+                         :sugar 1
+                         :butter 2})
+
 
 (defn error [& args]
   (apply println args)
@@ -200,7 +210,9 @@
   (let [items (get order :items)]
     (add-ingredients
      (multiply-ingredients (get items :cake 0) cake-ingredients)
-     (multiply-ingredients (get items :cookie 0) cookie-ingredients))))
+     (add-ingredients
+      (multiply-ingredients (get items :brownies 0) brownie-ingredients)
+      (multiply-ingredients (get items :cookie 0) cookie-ingredients)))))
 
 
 (defn orders->ingredients [orders]
@@ -214,6 +226,8 @@
     (bake-cake)
     (= item :cookies)
     (bake-cookies)
+    (= item :brownies)
+    (bake-brownies)
     :else
     (error "I don't know how to bake" item)))
 
@@ -234,5 +248,19 @@
         (delivery {:orderid (get order :orderid)
                    :address (get order :address)
                    :rackids racks})))))
+
+
+(defn bake-brownies []
+  (add :butter 2)
+  (add :sugar 1)
+  (add :cocoa 2)
+  (mix)
+  (add :flour 2)
+  (add :egg 2)
+  (add :milk 1)
+  (mix)
+  (pour-into-pan)
+  (bake-pan 35)
+  (cool-pan))
 
 
