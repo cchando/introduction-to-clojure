@@ -2,6 +2,16 @@
 (ns introduction-to-clojure.core
   (:require [bakery.core :refer :all]))
 
+(def baking {:recipes {:cake {:ingredients {:egg 2
+                                            :flour 2
+                                            :sugar 1
+                                            :milk 1}
+                              :steps [[:add :all]
+                                      [:mix]
+                                      [:pour]
+                                      [:bake 25]
+                                      [:cool]]}}})
+
 (def pantry-ingredients #{:flour :sugar :cocoa})
 
 (def fridge-ingredients #{:milk :egg :butter})
@@ -30,7 +40,6 @@
                          :milk 1
                          :sugar 1
                          :butter 2})
-
 
 (defn error [& args]
   (apply println args)
@@ -95,6 +104,11 @@
       (error "Unknown ingredient:" ingr)))
   ([ingr]
     (add ingr 1)))
+
+
+(defn perform [step]
+  (when (= :cool (first step))
+    (cool-pan)))
 
 
 (defn bake-cake []
