@@ -208,24 +208,6 @@
                                (order->ingredients order))))
 
 
-(defn day-at-the-bakery []
-  (let [orders (get-morning-orders)
-        ingredients (orders->ingredients orders)]
-    (fetch-list ingredients)
-    (doseq [order orders]
-      (let [items (get order :items)]
-        (dotimes [n (get items :cake 0)]
-          (let [rack-id (bake-cake)]
-            (delivery {:orderid (get order :orderid)
-                       :address (get order :address)
-                       :rackids [rack-id]})))
-        (dotimes [n (get items :cookie 0)]
-          (let [rack-id (bake-cookies)]
-            (delivery {:orderid (get order :orderid)
-                       :address (get order :address)
-                       :rackids [rack-id]})))))))
-
-
 (defn bake [item]
   (cond
     (= item :cake)
