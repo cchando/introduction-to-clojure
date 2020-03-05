@@ -192,49 +192,22 @@
   (contains? fridge-ingredients ingr))
 
 
-(defn fetch-pantry
-  ([ingr]
-   (fetch-pantry ingr 1))
-  ([ingr n]
-   (if (from-pantry? ingr)
-     (do
-       (go-to :pantry)
-       (dotimes [i n]
-         (load-up ingr))
-       (go-to :prep-area)
-       (dotimes [i n]
-         (unload ingr)))
-     (error ingr "not from pantry"))))
-
-
-(defn fetch-fridge
-  ([ingr]
-   (fetch-fridge ingr 1))
-  ([ingr n]
-   (if (from-fridge? ingr)
-     (do
-       (go-to :fridge)
-       (dotimes [i n]
-         (load-up ingr))
-       (go-to :prep-area)
-       (dotimes [i n]
-         (unload ingr)))
-     (error ingr "not from fridge"))))
-
-
 (defn fetch
   ([ingr]
    (fetch ingr 1))
   ([ingr n]
-   (cond
-     (from-fridge? ingr)
-     (fetch-fridge ingr n)
-     ;;
-     (from-pantry? ingr)
-     (fetch-pantry ingr n)
-     ;;
-     :else
-     (println "I don't know where to find ingr"))))
+   (let [ingredients (get baking :ingredients)
+         kv (get ingredients ingr)
+         loc (get kv :storage)]
+     (if (contains? ingredients ingr)
+       (do
+         (go-to loc)
+         (dotimes [i n]
+           (load-up ingr))
+         (go-to :prep-area)
+         (dotimes [i n]
+           (unload ingr)))
+       (println "I don't know where to find" ingr)))))
 
 
 (defn load-up-amount [ingr amount]
