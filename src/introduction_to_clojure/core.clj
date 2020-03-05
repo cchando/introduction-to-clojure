@@ -3,17 +3,41 @@
 (ns introduction-to-clojure.core
   (:require [bakery.core :refer :all]))
 
-(def baking {:recipes {:cake {:ingredients {:egg 2
-                                            :flour 2
-                                            :sugar 1
-                                            :milk 1}
-                              :steps [[:add :all]
-                                      [:mix]
-                                      [:pour]
-                                      [:bake 25]
-                                      [:cool]]}}})
-
-(def pantry-ingredients #{:flour :sugar :cocoa})
+(def baking  {:recipes {:cake {:ingredients {:egg   2
+                                             :flour 2
+                                             :sugar 1
+                                             :milk  1}
+                               :steps [[:add :all]
+                                       [:mix]
+                                       [:pour]
+                                       [:bake 25]
+                                       [:cool]]}
+                        :cookies {:ingredients {:egg 1
+                                                :flour 1
+                                                :butter 1
+                                                :sugar 1}
+                                  :steps [[:add :all]
+                                          [:mix]
+                                          [:pour]
+                                          [:bake 30]
+                                          [:cool]]}
+                        :brownies {:ingredients {:egg 2
+                                                 :flour 2
+                                                 :butter 2
+                                                 :cocoa 2
+                                                 :sugar 1
+                                                 :milk 1}
+                                   :steps [[:add :butter]
+                                           [:add :cocoa]
+                                           [:add :sugar]
+                                           [:mix]
+                                           [:add :egg]
+                                           [:add :flour]
+                                           [:add :milk]
+                                           [:mix]
+                                           [:pour]
+                                           [:bake 35]
+                                           [:cool]]}}})(def pantry-ingredients #{:flour :sugar :cocoa})
 
 (def fridge-ingredients #{:milk :egg :butter})
 
@@ -137,42 +161,6 @@
         (error "I don't know how to" (first step))))
 
 
-(defn bake-cake []
-  (add :flour 2)
-  (add :egg 2)
-  (add :milk 1)
-  (add :sugar 1)
-  (mix)
-  (pour-into-pan)
-  (bake-pan 25)
-  (cool-pan))
-
-
-(defn bake-cookies []
-  (add :egg 1)
-  (add :flour 1)
-  (add :sugar 1)
-  (add :butter 1)
-  (mix)
-  (pour-into-pan)
-  (bake-pan 30)
-  (cool-pan))
-
-
-(defn bake-brownies []
-  (add :butter 2)
-  (add :sugar 1)
-  (add :cocoa 2)
-  (mix)
-  (add :flour 2)
-  (add :egg 2)
-  (add :milk 1)
-  (mix)
-  (pour-into-pan)
-  (bake-pan 35)
-  (cool-pan))
-
-
 (defn from-pantry? [ingr]
   (contains? pantry-ingredients ingr))
 
@@ -262,11 +250,12 @@
 
 (defn order->ingredients [order]
   (let [items (get order :items)]
-    (add-ingredients
-     (multiply-ingredients (get items :cake 0) cake-ingredients)
-     (add-ingredients
-      (multiply-ingredients (get items :brownies 0) brownie-ingredients)
-      (multiply-ingredients (get items :cookie 0) cookie-ingredients)))))
+    (reduce add-ingredients {}
+            (for [kv items]
+              (let [recipes (get baking :recipes)
+                    recipe (get recipes (first kv))
+                    ingredients (get recipe :ingredients)]
+                (multiply-ingredients (second kv) ingredients))))))
 
 
 (defn orders->ingredients [orders]
