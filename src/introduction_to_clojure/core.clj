@@ -37,7 +37,21 @@
                                            [:mix]
                                            [:pour]
                                            [:bake 35]
-                                           [:cool]]}}})(def pantry-ingredients #{:flour :sugar :cocoa})
+                                           [:cool]]}}
+              :ingredients {:egg {:storage :fridge
+                                  :usage :squeezed}
+                            :milk {:storage :fridge
+                                   :usage :scooped}
+                            :flour {:storage :pantry
+                                    :usage :scooped}
+                            :butter {:storage :fridge
+                                     :usage :simple}
+                            :sugar {:storage :pantry
+                                    :usage :scooped}
+                            :cocoa {:storage :pantry
+                                    :usage :scooped}}})
+
+(def pantry-ingredients #{:flour :sugar :cocoa})
 
 (def fridge-ingredients #{:milk :egg :butter})
 
