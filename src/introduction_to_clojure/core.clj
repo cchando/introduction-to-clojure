@@ -90,14 +90,23 @@
 
 
 (defn scooped? [ingr]
-  (contains? scooped ingr))
+  (let [ingredients (get baking :ingredients)
+        kv (get ingredients ingr)
+        usage (get kv :usage)]
+    (= :scooped usage)))
 
 
 (defn squeezed? [ingr]
-  (contains? squeezed ingr))
+  (let [ingredients (get baking :ingredients)
+        kv (get ingredients ingr)
+        usage (get kv :usage)]
+    (= :squeezed usage)))
 
 (defn simple? [ingr]
-  (contains? simple ingr))
+  (let [ingredients (get baking :ingredients)
+        kv (get ingredients ingr)
+        usage (get kv :usage)]
+    (= :simple usage)))
 
 
 (defn add-scooped
