@@ -1,28 +1,5 @@
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 (ns introduction-to-clojure.core
   (:require [bakery.core :refer :all]))
 
@@ -182,6 +159,20 @@
   (cool-pan))
 
 
+(defn bake-brownies []
+  (add :butter 2)
+  (add :sugar 1)
+  (add :cocoa 2)
+  (mix)
+  (add :flour 2)
+  (add :egg 2)
+  (add :milk 1)
+  (mix)
+  (pour-into-pan)
+  (bake-pan 35)
+  (cool-pan))
+
+
 (defn from-pantry? [ingr]
   (contains? pantry-ingredients ingr))
 
@@ -295,10 +286,6 @@
     (error "I don't know how to bake" item)))
 
 
-(defn main []
-  (day-at-the-bakery))
-
-
 (defn day-at-the-bakery []
   (let [orders (get-morning-orders)
         ingredients (orders->ingredients orders)]
@@ -313,17 +300,12 @@
                    :rackids racks})))))
 
 
-(defn bake-brownies []
-  (add :butter 2)
-  (add :sugar 1)
-  (add :cocoa 2)
-  (mix)
-  (add :flour 2)
-  (add :egg 2)
-  (add :milk 1)
-  (mix)
-  (pour-into-pan)
-  (bake-pan 35)
-  (cool-pan))
+(defn main []
+  (day-at-the-bakery))
 
+
+(defn bake-recipe [recipe]
+  (last
+   (for [step (get recipe :steps)]
+     (perform (get recipe :ingredients) step))))
 
