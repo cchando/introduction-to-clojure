@@ -1,4 +1,28 @@
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 (ns introduction-to-clojure.core
   (:require [bakery.core :refer :all]))
 
@@ -44,6 +68,11 @@
 (defn error [& args]
   (apply println args)
   :error)
+
+
+(defn flag []
+  (println "---FLAG---"))
+
 
 (defn scooped? [ingr]
   (contains? scooped ingr))
@@ -106,9 +135,29 @@
     (add ingr 1)))
 
 
-(defn perform [step]
-  (when (= :cool (first step))
-    (cool-pan)))
+(defn perform [ingredients step]
+  (cond (= :cool (first step))
+        (cool-pan)
+        (= :mix (first step))
+        (mix)
+        (= :pour (first step))
+        (pour-into-pan)
+        (= :bake (first step))
+        (bake-pan (second step))
+        (= :add (first step))
+        (cond
+          (= (count step) 2)
+          (if
+              (= (second step) :all)
+            (doseq [kv ingredients]
+              (add (first kv) (second kv)))
+            (add (second step) (get ingredients (second step))))
+          (= (count step) 3)
+          (add (second step) (nth step 2))
+          :else
+          (error "I don't know how to add" (second step)))
+        :else
+        (error "I don't know how to" (first step))))
 
 
 (defn bake-cake []
