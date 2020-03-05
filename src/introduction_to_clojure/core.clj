@@ -274,18 +274,6 @@
                                (order->ingredients order))))
 
 
-(defn bake [item]
-  (cond
-    (= item :cake)
-    (bake-cake)
-    (= item :cookies)
-    (bake-cookies)
-    (= item :brownies)
-    (bake-brownies)
-    :else
-    (error "I don't know how to bake" item)))
-
-
 (defn day-at-the-bakery []
   (let [orders (get-morning-orders)
         ingredients (orders->ingredients orders)]
@@ -308,4 +296,8 @@
   (last
    (for [step (get recipe :steps)]
      (perform (get recipe :ingredients) step))))
+
+
+(defn bake [item]
+  (bake-recipe (get (get baking :recipes) item)))
 
